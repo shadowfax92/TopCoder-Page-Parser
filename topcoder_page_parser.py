@@ -52,6 +52,11 @@ class TopCoderProblemDetails:
         self.store_date_and_time()
         self.create_dictionary()
 
+    def validate_data_received(self):
+        if self.problem_name is None:
+            print 'ERROR: Invalid URL. Exiting!'
+            sys.exit(1)
+
     def get_more_from_used_as(self):
         to_process = self.used_as.split()
         _dict = dict()
@@ -154,25 +159,35 @@ def identify_what_url_type(url):
 
 
 def get_content_from_url_and_store(url):
-    tree = html.parse(url).getroot()
+    try:
+        tree = html.parse(url).getroot()
 
-    tc_prob = TopCoderProblemDetails()
-    tc_prob.problem_name = tree.xpath('/html/body/table/tr/td[3]/div/table[1]/tr[1]/td[2]/a/text()')[0].strip(' \t\n\r')
-    tc_prob.used_in = tree.xpath('/html/body/table/tr/td[3]/div/table[1]/tr[2]/td[2]/a/text()')[0].strip(' \t\n\r')
-    tc_prob.used_as = tree.xpath('/html/body/table/tr/td[3]/div/table[1]/tr[3]/td[2]/text()')[0].strip(' \t\n\r')
-    tc_prob.categories = tree.xpath('/html/body/table/tr/td[3]/div/table[1]/tr[4]/td[2]/text()')[0].strip(' \t\n\r')
+        tc_prob = TopCoderProblemDetails()
+        tc_prob.problem_name = tree.xpath('/html/body/table/tr/td[3]/div/table[1]/tr[1]/td[2]/a/text()')[0].strip(' \t\n\r')
+        tc_prob.used_in = tree.xpath('/html/body/table/tr/td[3]/div/table[1]/tr[2]/td[2]/a/text()')[0].strip(' \t\n\r')
+        tc_prob.used_as = tree.xpath('/html/body/table/tr/td[3]/div/table[1]/tr[3]/td[2]/text()')[0].strip(' \t\n\r')
+        tc_prob.categories = tree.xpath('/html/body/table/tr/td[3]/div/table[1]/tr[4]/td[2]/text()')[0].strip(' \t\n\r')
 
-    tc_prob.process_data()
-    tc_prob.print_content()
-
-    return tc_prob
+        tc_prob.process_data()
+        tc_prob.print_content()
+        return tc_prob
+    except Exception, e:
+        print 'Something Went Wrong :('
+        print 'Exception: ', str(e)
+        sys.exit(1)
 
 
 def main():
-    print 'Enter TC page url = '
-    url = sys.stdin.readline().rstrip()
-    # url = 'http://community.topcoder.com/tc?module=ProblemDetail&rd=16077&pm=13219'
+    if len(sys.argv) > 1:
+        url = ''.join(sys.argv[1:])
+        print len(sys.argv)
+    else:
+        print 'Enter TC page url = '
+        url = sys.stdin.readline().rstrip()
 
+    print 'Given url = ', url
+    #Test
+    # url = 'http://community.topcoder.com/tc?module=ProblemDetail&rd=16077&pm=13219'
     if check_is_url(url):
         url_type = identify_what_url_type(url)
 
