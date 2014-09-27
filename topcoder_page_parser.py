@@ -180,7 +180,6 @@ def get_content_from_url_and_store(url):
 def main():
     if len(sys.argv) > 1:
         url = ''.join(sys.argv[1:])
-        print len(sys.argv)
     else:
         print 'Enter TC page url = '
         url = sys.stdin.readline().rstrip()
