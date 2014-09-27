@@ -169,8 +169,8 @@ def get_content_from_url_and_store(url):
 
 def main():
     print 'Enter TC page url = '
-    # url = sys.stdin.readline().rstrip()
-    url = 'http://community.topcoder.com/tc?module=ProblemDetail&rd=16077&pm=13219'
+    url = sys.stdin.readline().rstrip()
+    # url = 'http://community.topcoder.com/tc?module=ProblemDetail&rd=16077&pm=13219'
 
     if check_is_url(url):
         url_type = identify_what_url_type(url)
