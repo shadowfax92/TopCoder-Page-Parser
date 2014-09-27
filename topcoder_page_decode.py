@@ -3,6 +3,8 @@ from lxml import html
 import requests
 import os
 import re
+import time
+import datetime
 
 PROBLEM_DETAIL_URL='tc_problem_detail_page'
 PROBLEM_STATEMENT_URL = 'tc_problem_statement_page'
@@ -18,10 +20,13 @@ class TopCoderProblemDetails:
         #process data
         self.division = None
         self.level = None
+        self.date = None
+        self.time = None
         pass
 
     def process_data(self):
         self.get_more_from_used_as()
+        self.store_date_and_time()
 
     def get_more_from_used_as(self):
         to_process = self.used_as.split()
@@ -41,6 +46,11 @@ class TopCoderProblemDetails:
 
         return
 
+    def store_date_and_time(self):
+        curr_time = datetime.datetime.now()
+        self.date = curr_time.strftime('%d-%m-%Y')
+        self.time = curr_time.strftime('%H:%M:%S')
+
     def print_content(self):
         print 'problem_name = ', self.problem_name
         print 'used_in = ', self.used_in
@@ -50,8 +60,10 @@ class TopCoderProblemDetails:
         print 'data from processing...'
         print 'Division = ', str(self.division)
         print 'Level = ', str(self.level)
+        print 'Date = ', str(self.date)
+        print 'Time = ', str(self.time)
 
-
+        return
 
 
 def check_is_url(url):
