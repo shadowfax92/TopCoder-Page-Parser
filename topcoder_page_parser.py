@@ -96,7 +96,7 @@ class TopCoderProblemDetails:
     def print_content(self):
         print 'problem_name = ', self.problem_name
         print 'used_in = ', self.used_in
-        print 'used_ad = ', self.used_as
+        print 'used_as = ', self.used_as
         print 'categories = ', self.categories
         print 'url = ', self.url
 
@@ -204,8 +204,15 @@ def get_content_from_url_and_store(url):
         tc_prob = TopCoderProblemDetails()
         tc_prob.problem_name = tree.xpath('/html/body/table/tr/td[3]/div/table[1]/tr[1]/td[2]/a/text()')[0].strip(' \t\n\r')
         tc_prob.used_in = tree.xpath('/html/body/table/tr/td[3]/div/table[1]/tr[2]/td[2]/a/text()')[0].strip(' \t\n\r')
-        tc_prob.used_as = tree.xpath('/html/body/table/tr/td[3]/div/table[1]/tr[3]/td[2]/text()')[0].strip(' \t\n\r')
-        tc_prob.categories = tree.xpath('/html/body/table/tr/td[3]/div/table[1]/tr[4]/td[2]/text()')[0].strip(' \t\n\r')
+
+        used_as_tmp = tree.xpath('/html/body/table/tr/td[3]/div/table[1]/tr[3]/td[2]/text()')[0].strip(' \t\n\r')
+        # If there are more than one used_as, get the first index
+        tc_prob.used_as = used_as_tmp.split(',')[0]
+
+        categories_tmp = tree.xpath('/html/body/table/tr/td[3]/div/table[1]/tr[4]/td[2]/text()')[0].strip(' \t\n\r')
+        # replace the comma in category with ":" so that it won't affect the CSV formatting
+        tc_prob.categories = ':'.join(categories_tmp.split(', '))
+
         tc_prob.url = url
 
         tc_prob.process_data()
@@ -225,9 +232,12 @@ def main():
         url = sys.stdin.readline().rstrip()
 
     print 'Given url = ', url
+
     #Test
     # url = 'http://community.topcoder.com/tc?module=ProblemDetail&rd=16077&pm=13219' #Problem detail url
     # url = 'http://community.topcoder.com/stat?c=problem_statement&pm=11278' #Problem statement url
+    # url = 'http://community.topcoder.com/stat?c=problem_statement&pm=3561&rd=6519' # contains 2 used ins
+
     if check_is_url(url):
         url = identify_and_get_right_url(url)
         tc_prob_obj = get_content_from_url_and_store(url)
