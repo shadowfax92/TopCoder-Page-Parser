@@ -142,14 +142,15 @@ class UpdateDataStore:
         for line in csv.reader(fh, delimiter=',', skipinitialspace=True):
 
             # checking just the problem name
-            if line[0] == tc_dict[self.tc_prob_obj.col_problem_name]:
-                return True
+            if len(line) > 0:
+                if line[0] == tc_dict[self.tc_prob_obj.col_problem_name]:
+                    return True
 
         return False
 
     def do_first_time_init(self):
         file_size = os.path.getsize(self.file_path)
-        print 'Exiting file size = ', file_size
+        print 'current file size = ', file_size
         if file_size == 0:
             # write the column names to file
             fh = open(self.file_path, 'a+')
