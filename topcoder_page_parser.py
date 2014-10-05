@@ -160,6 +160,7 @@ class UpdateDataStore:
 
             fh.write('\n')
             fh.close()
+        return
 
 
 def check_is_url(url):
@@ -207,7 +208,7 @@ def get_content_from_url_and_store(url):
 
         used_as_tmp = tree.xpath('/html/body/table/tr/td[3]/div/table[1]/tr[3]/td[2]/text()')[0].strip(' \t\n\r')
         # If there are more than one used_as, get the first index
-        tc_prob.used_as = used_as_tmp.split(',')[0]
+        tc_prob.used_as = used_as_tmp.split(',')[0].strip(' \t\n\r')
 
         categories_tmp = tree.xpath('/html/body/table/tr/td[3]/div/table[1]/tr[4]/td[2]/text()')[0].strip(' \t\n\r')
         # replace the comma in category with ":" so that it won't affect the CSV formatting
@@ -225,13 +226,15 @@ def get_content_from_url_and_store(url):
 
 
 def main():
+    url = None
     if len(sys.argv) > 1:
-        url = ''.join(sys.argv[1:])
+        url = sys.argv[1]
     else:
         print 'Enter TC page url = '
         url = sys.stdin.readline().rstrip()
 
-    print 'Given url = ', url
+    if url is not None:
+        print 'Given url = ', url
 
     #Test
     # url = 'http://community.topcoder.com/tc?module=ProblemDetail&rd=16077&pm=13219' #Problem detail url
